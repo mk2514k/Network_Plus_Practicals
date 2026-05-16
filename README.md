@@ -9,7 +9,7 @@ Each task folder contains detailed notes and screenshots from the session.
 |---  |------|
 |  1  | Wireshark — DNS & HTTP packet capture
 |  2  | GNS3 — SFP/QSFP/DAC + fibre link
-|  3  | Subnetting drill — 10 problems + supernetting
+|  3  | Subnetting drills — 10 problems + supernetting
 |  4  | IPv6 addressing — EUI-64, link-local, compression
 
 ## Environment
