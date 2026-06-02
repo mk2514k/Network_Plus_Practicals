@@ -8,9 +8,10 @@ Each task folder contains detailed notes and screenshots from the session.
 | Num | Task |
 |---  |------|
 |  1  | Wireshark — DNS & HTTP packet capture
-|  2  | GNS3 — SFP/QSFP/DAC + fibre link
-|  3  | Subnetting drills — 10 problems + supernetting
-|  4  | IPv6 addressing — EUI-64, link-local, compression
+|  2  | Subnetting drills — 10 problems + supernetting
+|  3  | IPv6 addressing — EUI-64, link-local, compression
+|  4  | VLAN + inter-VLAN Routing — Trunking, router-on-a-stick, 802.1Q
+|  5  | Static Route + OSPF + PAT — OSPF, static routing, PAT, NAT overload
 
 ## Environment
 - OS: Fedora Linux (Niri window manager)
