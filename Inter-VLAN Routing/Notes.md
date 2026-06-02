@@ -1,4 +1,4 @@
-# Lab 1 — VLAN Segmentation and Inter-VLAN Routing
+# VLAN Segmentation and Inter-VLAN Routing
 
 **Tools Used:** Cisco Packet Tracer
 **Topics Covered:** VLANs, Trunking, Router-on-a-Stick, 802.1Q Tagging
