@@ -12,7 +12,7 @@ In this lab, I created two separate VLANs across two switches and configured a r
 
 The VLANs represent different departments on a network, with devices in VLAN 10 and VLAN 20 placed into separate broadcast domains. By default, devices in different VLANs cannot communicate with each other, so I used router sub-interfaces and 802.1Q tagging to enable routing between the networks.
 
-The goal was to allow a device in VLAN 10 to successfully communicate with a device in VLAN 20 while maintaining VLAN separation.
+The goal was to allow a device in VLAN 20 to successfully communicate with a device in VLAN 10 while maintaining VLAN separation.
 
 ---
 
@@ -43,9 +43,9 @@ During this lab I practised:
               /          \
        (Access)            \ (Trunk)
      /       \               \ 
-   PC1     PC2          [   SW2   ]
+   PC0     PC1          [   SW2   ]
   VLAN10   VLAN20       /         \
-                       PC3          PC4
+                       PC2          PC3
                      VLAN10        VLAN20
 ```
 
@@ -55,11 +55,11 @@ During this lab I practised:
 
 | Device     | VLAN | IP Address       | Default Gateway |
 | ---------- | ---- | ---------------- | --------------- |
-| PC1        | 10   | 192.168.10.10/24 | 192.168.10.1    |
-| PC2        | 20   | 192.168.20.10/24 | 192.168.20.1    |
-| PC3        | 10   | 192.168.10.20/24 | 192.168.10.1    |
-| PC4        | 20   | 192.168.20.20/24 | 192.168.20.1    |
-| R1 G0/0.10 | 10   | 192.168.10.1/24  | N/A             |
+| PC0        | 10   | 192.168.10.10/24 | 192.168.10.1    |
+| PC1        | 20   | 192.168.20.10/24 | 192.168.20.1    |
+| PC2        | 10   | 192.168.10.20/24 | 192.168.10.1    |
+| PC3        | 20   | 192.168.20.20/24 | 192.168.20.1    |
+| R0 G0/0.10 | 10   | 192.168.10.1/24  | N/A             |
 | R1 G0/0.20 | 20   | 192.168.20.1/24  | N/A             |
 
 ---
@@ -70,8 +70,8 @@ I started by creating VLAN 10 and VLAN 20 on both switches and assigning the acc
 
 The access ports were configured so that:
 
-* PC1 and PC3 belonged to VLAN 10
-* PC2 and PC4 belonged to VLAN 20
+* PC0 and PC2 belonged to VLAN 10
+* PC1 and PC3 belonged to VLAN 20
 
 This separated the devices into different logical networks even though they were connected to the same switching infrastructure.
 
@@ -83,8 +83,8 @@ To allow VLAN traffic to travel between switches and reach the router, I configu
 
 The trunk connections were:
 
-* SW1 to SW2
-* SW1 to R1
+* SW0 to SW1
+* SW0 to R0
 
 These links carry traffic for multiple VLANs across a single cable.
 
@@ -148,10 +148,10 @@ Expected result:
 
 ## Connectivity Test
 
-From PC1, I tested connectivity to PC4:
+From PC3, I tested connectivity to PC0:
 
 ```cmd
-ping 192.168.20.20
+ping 192.168.10.1
 ```
 
 Successful replies confirmed that:
@@ -164,7 +164,7 @@ Successful replies confirmed that:
 Expected output:
 
 ```text
-Reply from 192.168.20.20: bytes=32 time<1ms TTL=127
+Reply from 192.168.10.1: bytes=32 time<1ms TTL=127
 ```
 
 ---
