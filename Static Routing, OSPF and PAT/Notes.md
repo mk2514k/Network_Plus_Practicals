@@ -1,4 +1,4 @@
-Static Routing, OSPF and PAT (Simulated Internet Access)
+# Static Routing, OSPF and PAT (Simulated Internet Access)
 
 **Tools Used:** Cisco Packet Tracer  
 **Topics Covered:** Static Routes, OSPF, PAT (NAT Overload), Routing Tables  
