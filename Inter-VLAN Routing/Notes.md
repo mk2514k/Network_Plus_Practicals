@@ -1,218 +1,187 @@
-# VLAN Segmentation + Inter-VLAN Routing
+# Lab 1 — VLAN Segmentation and Inter-VLAN Routing
 
-**Tools:** Cisco Packet Tracer  
-**Topics:** VLANs, trunking, router-on-a-stick, 802.1Q  
-**Related cert:** CompTIA Network+ (N10-009)
-
----
-
-## What this lab covers
-
-Two VLANs are created across two switches. A single router handles traffic between them using a technique called **router-on-a-stick** — one physical cable, two logical networks.
-
-The goal: a PC on VLAN 10 can ping a PC on VLAN 20, even though they're on completely separate networks.
+**Tools Used:** Cisco Packet Tracer
+**Topics Covered:** VLANs, Trunking, Router-on-a-Stick, 802.1Q Tagging
+**Related Certification:** CompTIA Network+ (N10-009)
 
 ---
 
-## Network topology
+## Overview
 
-```
-        [  R1 ]
-            |
-            |  (trunk)
-            |
-        [  SW1 ]
-        /        \
-   (access)        \ (trunk)
-                     \
-   PC1    PC2      [  SW2  ]
-  VLAN10  VLAN20   /        \
-                 PC3         PC4
-              VLAN10         VLAN20
+In this lab, I created two separate VLANs across two switches and configured a router to allow communication between them using a router-on-a-stick setup.
+
+The VLANs represent different departments on a network, with devices in VLAN 10 and VLAN 20 placed into separate broadcast domains. By default, devices in different VLANs cannot communicate with each other, so I used router sub-interfaces and 802.1Q tagging to enable routing between the networks.
+
+The goal was to allow a device in VLAN 10 to successfully communicate with a device in VLAN 20 while maintaining VLAN separation.
+
+---
+
+## What I Learned
+
+During this lab I practised:
+
+* Creating and naming VLANs
+* Assigning switch ports to VLANs
+* Configuring trunk links between switches
+* Understanding 802.1Q VLAN tagging
+* Configuring router-on-a-stick routing
+* Creating router sub-interfaces
+* Testing communication between VLANs
+* Verifying VLAN and trunk configurations
+
+---
+
+## Network Topology
+
+```text
+              [    R1   ]
+                   |
+                   | (Trunk)
+                   |
+
+              [   SW1   ]
+              /          \
+       (Access)            \ (Trunk)
+     /       \               \ 
+   PC1     PC2          [   SW2   ]
+  VLAN10   VLAN20       /         \
+                       PC3          PC4
+                     VLAN10        VLAN20
 ```
 
 ---
 
-## IP address plan
+## IP Addressing Plan
 
-| Device | VLAN | IP Address       | Default Gateway |
-|--------|------|------------------|-----------------|
-| PC1    | 10   | 192.168.10.10/24 | 192.168.10.1    |
-| PC2    | 20   | 192.168.20.10/24 | 192.168.20.1    |
-| PC3    | 10   | 192.168.10.20/24 | 192.168.10.1    |
-| PC4    | 20   | 192.168.20.20/24 | 192.168.20.1    |
-| R1 g0/0.10 | 10 | 192.168.10.1/24 | -              |
-| R1 g0/0.20 | 20 | 192.168.20.1/24 | -              |
+| Device     | VLAN | IP Address       | Default Gateway |
+| ---------- | ---- | ---------------- | --------------- |
+| PC1        | 10   | 192.168.10.10/24 | 192.168.10.1    |
+| PC2        | 20   | 192.168.20.10/24 | 192.168.20.1    |
+| PC3        | 10   | 192.168.10.20/24 | 192.168.10.1    |
+| PC4        | 20   | 192.168.20.20/24 | 192.168.20.1    |
+| R1 G0/0.10 | 10   | 192.168.10.1/24  | N/A             |
+| R1 G0/0.20 | 20   | 192.168.20.1/24  | N/A             |
 
 ---
 
-## Step-by-step configuration
+## VLAN Configuration
 
-### 1. Create VLANs on SW1
+I started by creating VLAN 10 and VLAN 20 on both switches and assigning the access ports connected to the PCs.
 
-VLANs are created first, then ports are assigned to them.
+The access ports were configured so that:
 
-```
-enable
-configure terminal
+* PC1 and PC3 belonged to VLAN 10
+* PC2 and PC4 belonged to VLAN 20
 
-vlan 10
- name VLAN10_Sales
-exit
+This separated the devices into different logical networks even though they were connected to the same switching infrastructure.
 
-vlan 20
- name VLAN20_IT
-exit
-```
+---
 
-### 2. Assign access ports on SW1
+## Trunk Configuration
 
-Access ports connect to end devices (PCs). Each port belongs to one VLAN only.
+To allow VLAN traffic to travel between switches and reach the router, I configured trunk links using 802.1Q tagging.
 
-```
-interface fastEthernet 0/1
- switchport mode access
- switchport access vlan 10
-exit
+The trunk connections were:
 
-interface fastEthernet 0/2
- switchport mode access
- switchport access vlan 20
-exit
-```
+* SW1 to SW2
+* SW1 to R1
 
-### 3. Set trunk ports on SW1
+These links carry traffic for multiple VLANs across a single cable.
 
-Trunk ports carry traffic from all VLANs simultaneously using 802.1Q tagging. One trunk goes up to R1, one goes across to SW2.
+---
 
-```
-interface fastEthernet 0/3
- switchport mode trunk
-exit
+## Router-on-a-Stick Configuration
 
-interface fastEthernet 0/4
- switchport mode trunk
-exit
-```
+To allow communication between VLANs, I configured router sub-interfaces on R1.
 
-### 4. Configure SW2
+Each VLAN was assigned its own logical interface:
 
-Same VLAN setup. Access ports for PCs, one trunk back to SW1.
+| Sub-Interface | VLAN | Gateway Address |
+| ------------- | ---- | --------------- |
+| G0/0.10       | 10   | 192.168.10.1    |
+| G0/0.20       | 20   | 192.168.20.1    |
 
-```
-enable
-configure terminal
+Using `encapsulation dot1Q`, the router can identify VLAN tags and route traffic between the networks.
 
-vlan 10
- name VLAN10_Sales
-exit
-
-vlan 20
- name VLAN20_IT
-exit
-
-interface fastEthernet 0/1
- switchport mode access
- switchport access vlan 10
-exit
-
-interface fastEthernet 0/2
- switchport mode access
- switchport access vlan 20
-exit
-
-interface fastEthernet 0/3
- switchport mode trunk
-exit
-```
-
-### 5. Configure R1 (router-on-a-stick)
-
-One physical interface (`g0/0`) is split into two logical sub-interfaces — one per VLAN. The `encapsulation dot1Q` line tells the router which VLAN tag to look for on incoming frames.
-
-```
-enable
-configure terminal
-
-interface gigabitEthernet 0/0
- no shutdown
-exit
-
-interface gigabitEthernet 0/0.10
- encapsulation dot1Q 10
- ip address 192.168.10.1 255.255.255.0
-exit
-
-interface gigabitEthernet 0/0.20
- encapsulation dot1Q 20
- ip address 192.168.20.1 255.255.255.0
-exit
-```
-
-### 6. Set PC IP addresses
-
-On each PC: Desktop → IP Configuration.  
-Set the IP, subnet mask (`255.255.255.0`), and default gateway as per the IP plan above.
+This was my first experience using router-on-a-stick and it helped me understand how a single physical router interface can service multiple VLANs.
 
 ---
 
 ## Verification
 
-Run these on SW1 and confirm the output:
+After completing the configuration, I verified the setup using the following commands.
 
-```
+### Verify VLANs
+
+```cisco
 show vlan brief
 ```
-Both VLANs (10 and 20) should appear with their assigned ports listed.
 
-```
+Expected result:
+
+* VLAN 10 appears with the correct access ports
+* VLAN 20 appears with the correct access ports
+
+### Verify Trunk Links
+
+```cisco
 show interfaces trunk
 ```
-Your trunk ports should appear here showing VLANs allowed and active.
 
-Run this on R1:
+Expected result:
 
-```
+* Trunk ports appear as active
+* VLANs 10 and 20 are allowed across the trunk
+
+### Verify Router Interfaces
+
+```cisco
 show ip interface brief
 ```
-Sub-interfaces `g0/0.10` and `g0/0.20` should both show `up/up` with their IPs assigned.
+
+Expected result:
+
+* G0/0.10 shows `up/up`
+* G0/0.20 shows `up/up`
 
 ---
 
-## Test — cross-VLAN ping
+## Connectivity Test
 
-From PC1 (VLAN 10) open Desktop → Command Prompt:
+From PC1, I tested connectivity to PC4:
 
-```
+```cmd
 ping 192.168.20.20
 ```
 
-This pings PC4 on VLAN 20 across both switches. A successful reply proves the full chain is working — access ports, trunk links, and router-on-a-stick routing.
+Successful replies confirmed that:
+
+* VLANs were configured correctly
+* Trunk links were working
+* Router-on-a-stick routing was functioning
+* Devices could communicate across VLAN boundaries
 
 Expected output:
-```
+
+```text
 Reply from 192.168.20.20: bytes=32 time<1ms TTL=127
 ```
 
 ---
 
-## Key concepts
+## Key Takeaways
 
-**VLAN** — logically separates devices on the same physical switch into different networks. Devices in different VLANs cannot communicate without a router.
+This lab helped me understand why VLANs are used to separate networks and how routers enable communication between them.
 
-**Access port** — connects to an end device, belongs to one VLAN, traffic is untagged.
+Before completing the lab, I understood the basic idea of VLANs, but configuring them across multiple switches and seeing traffic successfully routed between VLANs made the concept much easier to understand.
 
-**Trunk port** — connects switches or routers, carries multiple VLANs simultaneously using 802.1Q tags.
-
-**Router-on-a-stick** — a single router interface handles routing between VLANs using sub-interfaces. One cable, multiple logical connections.
-
-**802.1Q** — the industry standard for VLAN tagging on trunk links.
+It also gave me practical experience with trunking, 802.1Q tagging and router-on-a-stick routing, which are common concepts in enterprise networking environments.
 
 ---
 
-## Files in this folder
+## Files Included
 
-| File | Description |
-|------|-------------|
-| `lab1-vlan.pkt` | Packet Tracer save file |
-| `screenshots/` | Topology, show commands, ping output |
+| File            | Description                                      |
+| --------------- | ------------------------------------------------ |
+| `lab1-vlan.pkt` | Cisco Packet Tracer lab file                     |
+| `screenshots/`  | Topology, verification commands and ping results |
