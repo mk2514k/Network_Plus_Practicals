@@ -8,9 +8,9 @@
 
 ## Overview
 
-In this lab, I connected two routers together over a WAN link and used OSPF to automatically share routes between them. I also configured PAT (Port Address Translation) on R1 so that a device on a private LAN could access a simulated internet address.
+In this lab, I connected two routers together over a WAN link and used OSPF to automatically share routes between them. I also configured PAT (Port Address Translation) on R0 so that a device on a private LAN could access a simulated internet address.
 
-To simulate internet connectivity, I created a loopback interface on R2 with the IP address `8.8.8.8`.
+To simulate internet connectivity, I created a loopback interface on R1 with the IP address `8.8.8.8`.
 
 The goal was to get a PC on the `192.168.1.0/24` network to successfully ping `8.8.8.8` while learning how routing and NAT work together.
 
@@ -33,7 +33,7 @@ During this lab I practised:
 ## Network Topology
 
 ```text
-[ PC1 ] — [ SW1 ] — [ R1 ] —— WAN (10.0.0.0/30) —— [ R2 ]
+[ PC0 ] — [ SW0 ] — [ R0 ] —— WAN (10.0.0.0/30) —— [ R1 ]
               LAN                OSPF Area 0              |
           192.168.1.0/24      PAT on g0/1            Loopback0
                                                       8.8.8.8/32
@@ -43,13 +43,13 @@ During this lab I practised:
 
 ## IP Addressing Plan
 
-| Device | Interface | IP Address | Purpose |
+| Device   | Interface | IP Address | Purpose |
 |----------|-----------|------------|----------|
-| PC1 | NIC | 192.168.1.10/24 | Client device |
-| R1 | G0/0 | 192.168.1.1/24 | Default gateway |
-| R1 | G0/1 | 10.0.0.1/30 | WAN connection |
-| R2 | G0/0 | 10.0.0.2/30 | WAN connection |
-| R2 | Loopback0 | 8.8.8.8/32 | Simulated internet host |
+| PC0 | NIC | 192.168.1.10/24 | Client device |
+| R0  | G0/0 | 192.168.1.1/24 | Default gateway |
+| R0  | G0/1 | 10.0.0.1/30 | WAN connection |
+| R1  | G0/0 | 10.0.0.2/30 | WAN connection |
+| R1  | Loopback0 | 8.8.8.8/32 | Simulated internet host |
 
 ---
 
@@ -69,7 +69,7 @@ When the neighbour state changed to `FULL`, I knew the routers were successfully
 
 ## Configuring PAT
 
-I then configured PAT on R1.
+I then configured PAT on R0.
 
 My understanding is that PAT allows multiple devices on a private network to share a single public IP address. In this lab there was only one PC, but the configuration would still work if more devices were added later.
 
@@ -105,7 +105,7 @@ The NAT table was empty until traffic was generated from the PC.
 
 ## Connectivity Test
 
-From PC1 I ran:
+From PC0 I ran:
 
 ```cmd
 ping 8.8.8.8
