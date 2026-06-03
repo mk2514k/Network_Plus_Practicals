@@ -18,5 +18,5 @@ Each task folder contains detailed notes and screenshots from the session.
 
 ## Environment
 - OS: Fedora Linux (Niri window manager)
-- Tools: Wireshark, GNS3, ipcalc, virt-manager
+- Tools: Wireshark, Cisco Packet Tracer, ipcalc, virt-manager
 - VMs: Kali Linux, Metasploitable
