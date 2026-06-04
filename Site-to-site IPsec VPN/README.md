@@ -241,6 +241,7 @@ Looking at the verified output from this lab:
 
 ## Files
 
-- **README.md** — this file. A full walkthrough of the lab including the theory behind IPSec, step-by-step configuration for both routers, verification commands, and an explanation of what the output actually means.
-- **screenshots/** — images taken throughout the lab showing the topology, the security license activation, ping tests from PC1 to PC2, and the verified ISAKMP and IPSec SA output on Router1.
-- **site-to-site-vpn.pkt** — the Packet Tracer project file. Open this in Cisco Packet Tracer to explore the full configuration on both routers, run your own pings, and inspect the tunnel live.
+| File      | Description      |
+|-----------|------------------|
+| `site-to-site IPsec VPN lab` | Packet Tracer save file |
+| `screenshots/`               | Topology, interface brief, ping, man config sec feature, tunnel status & packet count, ping via tunnel |
