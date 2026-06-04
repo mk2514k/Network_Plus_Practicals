@@ -50,5 +50,5 @@ Applied inbound on `g0/0` — the LAN-facing interface. Traffic gets checked as 
 
 | File | Description |
 |------|-------------|
-| `lab5-acl.pkt` | Packet Tracer save file |
-| `screenshots/` | Topology, interface brief, ping, HTTP test, SSH denial, hit counters |
+| `ACL Lab.pkt` | Packet Tracer save file |
+| `screenshots/` | Topology, interface brief, ping, ACL config & application, HTTP test, SSH denial, hit counters |
